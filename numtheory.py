@@ -1,5 +1,6 @@
 from random import getrandbits, randint
 
+
 def odd(n: int) -> bool: return n % 2 != 0
 
 

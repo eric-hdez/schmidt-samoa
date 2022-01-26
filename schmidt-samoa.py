@@ -7,7 +7,6 @@ n : decryption modulus (p * q)
 λ : Carmichael's λ function: λ(n) = lcm[ λ(p), λ(q) ] = lcm(p - 1, q - 1)
         - λ(p) = p - 1, for any prime p
 '''
-
 from numtheory import lcm, make_prime, mod_inverse, pow_mod
 
 
@@ -37,7 +36,7 @@ def key_gen(nbits: int, k: int) -> int:
 
 def encrypt(m: int, N:int) -> int:
     '''
-    Schmidt-Samoa Encryption of mes)age m:
+    Schmidt-Samoa Encryption of message m:
 
     compute ciphertext c: c = m^N mod N
     '''
@@ -49,7 +48,7 @@ def decrypt(c: int, d: int, n: int) -> int:
     '''
     Schmidt-Samoa Decrpytion of ciphertext c:
 
-    compute message m: m^d mode pq
+    compute message m: m = c^d mod pq
     '''
     m = pow_mod(c, d, n)
     return m
