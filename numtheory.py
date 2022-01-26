@@ -110,3 +110,34 @@ def make_prime(nbits: int, k: int) -> int:
     return p
 
 
+def encode(m: str) -> int:
+    '''
+    encodes a string into an integer value.
+
+    Copyright (c) 2021, Darrell Long
+    All rights reserved.
+    '''
+    c = 0
+    power = 1
+
+    for char in m:
+        c += ord(char) * power
+        power *= 256
+
+    return c
+
+def decode(c: int) -> str:
+    '''
+    decodes an integer encoding into a message.
+
+    Copyright (c) 2021, Darrell Long
+    All rights reserved.
+    '''
+    m = ""
+
+    while c > 0:
+        m += chr(c % 256)
+        c //= 256
+
+    return m
+

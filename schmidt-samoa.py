@@ -7,7 +7,7 @@ n : decryption modulus (p * q)
 λ : Carmichael's λ function: λ(n) = lcm[ λ(p), λ(q) ] = lcm(p - 1, q - 1)
         - λ(p) = p - 1, for any prime p
 '''
-from numtheory import lcm, make_prime, mod_inverse, pow_mod
+from numtheory import decode, encode, lcm, make_prime, mod_inverse, pow_mod
 
 
 def key_gen(nbits: int, k: int) -> int:
@@ -52,3 +52,22 @@ def decrypt(c: int, d: int, n: int) -> int:
     '''
     m = pow_mod(c, d, n)
     return m
+
+
+def main() -> None:
+    pub, priv = key_gen(1024, 100)
+    d, n = priv
+
+    print("public key: {}\n".format(pub))
+    print("private key: {}\n".format(d))
+    print("decrypt mod: {}\n".format(n))
+    m = ""
+
+    while m != ["exit", "Exit"]:
+        msg = str(input("message to encrypt: "))
+        c = encrypt(encode(msg), pub)
+        print("encrypted message: {}\n".format(c))
+        m = decrypt(c, d, n)
+        print("decrypted message: {}\n".format(decode(m)))
+
+main()
