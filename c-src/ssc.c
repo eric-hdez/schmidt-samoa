@@ -4,9 +4,9 @@
 
 void ssc_key_gen(mpz_t N, mpz_t d, mpz_t n, uint64_t bits, uint64_t k) {
     uint64_t bitsz = bits / 2;
-
     mpz_t p, q, p_min_1, q_min_1, pm1_mod_q, qm1_mod_q;
     mpz_inits(p, q, p_min_1, q_min_1, pm1_mod_q, qm1_mod_q, NULL);
+
     make_prime(p, bitsz, k);
     make_prime(q, bitsz, k);
 
@@ -17,6 +17,7 @@ void ssc_key_gen(mpz_t N, mpz_t d, mpz_t n, uint64_t bits, uint64_t k) {
 
     while (!mpz_cmp(p, q) || !mpz_cmp_ui(pm1_mod_q, 0) || !mpz_cmp_ui(qm1_mod_q, 0)) {
         make_prime(q, bitsz, k);
+
         mpz_sub_ui(q_min_1, q, 1);
         mpz_mod(pm1_mod_q, p_min_1, q);
         mpz_mod(qm1_mod_q, q_min_1, p);
