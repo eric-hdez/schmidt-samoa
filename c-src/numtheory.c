@@ -1,5 +1,5 @@
 #include "numtheory.h"
-#include <inttypes.h>
+
 #include "randstate.h"
 
 void gcd(mpz_t d, mpz_t a, mpz_t b) {
@@ -18,7 +18,7 @@ void gcd(mpz_t d, mpz_t a, mpz_t b) {
     mpz_clears(tmp_a, tmp_b, t, NULL);
 }
 
-void lcm(mpz_t d, mpz_t a , mpz_t b) {
+void lcm(mpz_t d, mpz_t a, mpz_t b) {
     mpz_t prod_ab, gcd_ab;
     mpz_inits(prod_ab, gcd_ab, NULL);
 
@@ -37,7 +37,7 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
     mpz_init_set_ui(t_prime, 1);
     mpz_inits(tmp_r, tmp_t, q, NULL);
 
-    while(mpz_cmp_ui(r_prime, 0)) {
+    while (mpz_cmp_ui(r_prime, 0)) {
         mpz_fdiv_q(q, r, r_prime);
 
         mpz_set(tmp_r, r);
@@ -96,11 +96,11 @@ bool is_prime(mpz_t n, uint64_t k) {
 
     mpz_t r, s, a, y, j, two, n_min_1, n_min_3, s_min_1;
     mpz_inits(r, s, a, y, j, two, n_min_1, n_min_3, s_min_1, NULL);
-    
+
     mpz_sub_ui(n_min_1, n, 1);
     mpz_set(r, n_min_1);
     mpz_set_ui(s, 0);
-    while(mpz_even_p(r)) {
+    while (mpz_even_p(r)) {
         mpz_add_ui(s, s, 1);
         mpz_fdiv_q_ui(r, r, 2);
     }

@@ -27,10 +27,10 @@ void ssc_key_gen(mpz_t N, mpz_t d, mpz_t n, uint64_t bits, uint64_t k) {
 
     mpz_t λ;
     mpz_init(λ);
-    mpz_mul(n, p, q);          // decrypt modulus
-    mpz_mul(N, p, n);          // public key
-    lcm(λ, p_min_1, q_min_1);  // Carmichael's λ function
-    mod_inverse(d, N, λ);      // private key
+    mpz_mul(n, p, q); // decrypt modulus
+    mpz_mul(N, p, n); // public key
+    lcm(λ, p_min_1, q_min_1); // Carmichael's λ function
+    mod_inverse(d, N, λ); // private key
 
     mpz_clear(λ);
 }

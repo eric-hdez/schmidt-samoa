@@ -20,3 +20,6 @@ randstate.o: randstate.c
 
 clean:
 	rm -f *.o main
+
+format:
+	clang-format -i -style=file *.[ch]
