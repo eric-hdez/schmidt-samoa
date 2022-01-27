@@ -5,11 +5,23 @@
 #include <stdio.h>
 #include <gmp.h>
 
-void ssc_key_gen(mpz_t N, mpz_t d, mpz_t n, uint64_t bits, uint64_t k);
+typedef struct pubkey_t {
+    mpz_t N;
+} pubkey_t;
 
-void ssc_encrypt(mpz_t c, mpz_t m, mpz_t N);
+typedef struct privkey_t {
+    mpz_t d, n;
+} privkey_t;
 
-void ssc_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t n);
+pubkey_t init_pubkey(void);
+
+privkey_t init_privkey(void);
+
+void ssc_key_gen(pubkey_t *pubk, privkey_t *privk, uint64_t bits, uint64_t k);
+
+void ssc_encrypt(mpz_t c, mpz_t m, pubkey_t *pubk);
+
+void ssc_decrypt(mpz_t m, mpz_t c, privkey_t *privk);
 
 void ssc_encrypt_file(FILE *infile, FILE *outfile, mpz_t N);
 
