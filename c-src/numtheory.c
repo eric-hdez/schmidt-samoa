@@ -112,7 +112,6 @@ bool is_prime(mpz_t n, uint64_t k) {
         mpz_urandomm(a, state, n_min_3);
         mpz_add_ui(a, a, 2);
 
-        mpz_powm(y, a, r, n);
         pow_mod(y, a, r, n);
 
         if (mpz_cmp_ui(y, 1) && mpz_cmp(y, n_min_1)) {
