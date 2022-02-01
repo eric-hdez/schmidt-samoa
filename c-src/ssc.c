@@ -106,3 +106,35 @@ void ssc_decrypt_file(FILE *infile, FILE *outfile, privkey_t *priv) {
     free(block);
     mpz_clears(c, m, NULL);
 }
+
+void ssc_write_pub(pubkey_t *pub, mpz_t s, char username[], FILE *pubfile) {
+    gmp_fprintf(pubfile, "%Zx\n%Zx\n%s\n", pub->N, s, username);
+}
+
+void ssc_read_pub(pubkey_t *pub, mpz_t s, char username[], FILE *pubfile) {
+    gmp_fscanf(pubfile, "%Zx\n%Zx\n%s\n", pub->N, s, username);
+}
+
+void ssc_write_priv(privkey_t *priv, FILE *privfile) {
+    gmp_fprintf(privfile, "%Zx\n%Zx\n", priv->n, priv->d);
+}
+
+void ssc_read_priv(privkey_t *priv, FILE *privfile) {
+    gmp_fscanf(privfile, "%Zx\n%Zx\n", priv->n, priv->d);
+}
+
+void ssc_sign(mpz_t s, mpz_t m, pubkey_t *pub, privkey_t *priv) {
+    pow_mod(s, m, priv->d, pub->N);
+}
+
+bool ssc_verify(mpz_t m, mpz_t s, pubkey_t *pub) {
+    mpz_t v;
+    mpz_init(v);
+
+    pow_mod(v, s, pub->N, pub->N);
+    if (mpz_cmp(v, m) == 0) {
+        return true;
+    }
+
+    return false;
+}
