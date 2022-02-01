@@ -8,15 +8,19 @@
 
 typedef struct pubkey_t {
     mpz_t N;
+    uint64_t rlen;
 } pubkey_t;
 
 typedef struct privkey_t {
     mpz_t d, n;
+    uint64_t rlen;
 } privkey_t;
 
-pubkey_t *init_pubkey(void);
+pubkey_t init_pubkey(void);
 
-privkey_t *init_privkey(void);
+privkey_t init_privkey(void);
+
+void delete_keys(pubkey_t *pub, privkey_t *priv);
 
 void ssc_key_gen(pubkey_t *pub, privkey_t *priv, uint64_t bits, uint64_t k);
 

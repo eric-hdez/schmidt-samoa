@@ -2,25 +2,32 @@
 
 #include "numtheory.h"
 
-pubkey_t *init_pubkey() {
-    pubkey_t *pub = calloc(1, sizeof(pubkey_t));
-    mpz_init(pub->N);
+#include <math.h>
+
+pubkey_t init_pubkey() {
+    pubkey_t pub = { 0 };
+    mpz_init(pub.N);
     return pub;
 }
 
-privkey_t *init_privkey() {
-    privkey_t *priv = calloc(1, sizeof(privkey_t));
-    mpz_inits(priv->d, priv->n, NULL);
+privkey_t init_privkey() {
+    privkey_t priv = { 0 };
+    mpz_inits(priv.d, priv.n, NULL);
     return priv;
 }
 
+void delete_keys(pubkey_t *pub, privkey_t *priv) {
+    mpz_clears(pub->N, priv->d, priv->n, NULL);
+}
+
 void ssc_key_gen(pubkey_t *pub, privkey_t *priv, uint64_t bits, uint64_t k) {
-    uint64_t bitsz = bits / 2;
+    uint64_t pbits = (random() % (bits / 2)) + (bits / 4);
+    uint64_t qbits = bits - pbits;
     mpz_t p, q, p_min_1, q_min_1, pm1_mod_q, qm1_mod_q;
     mpz_inits(p, q, p_min_1, q_min_1, pm1_mod_q, qm1_mod_q, NULL);
 
-    make_prime(p, bitsz, k);
-    make_prime(q, bitsz, k);
+    make_prime(p, pbits, k);
+    make_prime(q, qbits, k);
 
     mpz_sub_ui(p_min_1, p, 1);
     mpz_sub_ui(q_min_1, q, 1);
@@ -28,7 +35,7 @@ void ssc_key_gen(pubkey_t *pub, privkey_t *priv, uint64_t bits, uint64_t k) {
     mpz_mod(qm1_mod_q, q_min_1, p);
 
     while (!mpz_cmp(p, q) || !mpz_cmp_ui(pm1_mod_q, 0) || !mpz_cmp_ui(qm1_mod_q, 0)) {
-        make_prime(q, bitsz, k);
+        make_prime(q, qbits, k);
 
         mpz_sub_ui(q_min_1, q, 1);
         mpz_mod(pm1_mod_q, p_min_1, q);
@@ -44,6 +51,9 @@ void ssc_key_gen(pubkey_t *pub, privkey_t *priv, uint64_t bits, uint64_t k) {
     lcm(λ, p_min_1, q_min_1); // Carmichael's λ function
     mod_inverse(priv->d, pub->N, λ); // private key
 
+    pub->rlen = bits - 1;
+    priv->rlen = pub->rlen;
+
     mpz_clears(λ, p_min_1, q_min_1, NULL);
 }
 
@@ -58,7 +68,7 @@ void ssc_decrypt(mpz_t m, mpz_t c, privkey_t *priv) {
 void ssc_encrypt_file(FILE *infile, FILE *outfile, pubkey_t *pub) {
     mpz_t m, c;
     mpz_inits(m, c, NULL);
-    size_t k = (mpz_sizeinbase(pub->N, 2) - 1) / 8;
+    size_t k = (pub->rlen) / 8;
     uint8_t *block = calloc(k, sizeof(uint8_t));
     block[0] = 0xFF;
 
@@ -80,7 +90,7 @@ void ssc_encrypt_file(FILE *infile, FILE *outfile, pubkey_t *pub) {
 void ssc_decrypt_file(FILE *infile, FILE *outfile, privkey_t *priv) {
     mpz_t c, m;
     mpz_inits(c, m, NULL);
-    size_t k = (mpz_sizeinbase(priv->n, 2) - 1) / 8; // Use bit count to calculate log base 2 of n.
+    size_t k = (priv->rlen) / 8;
     uint8_t *block = calloc(k, sizeof(uint8_t));
 
     while (!feof(infile)) {
