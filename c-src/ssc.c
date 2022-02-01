@@ -4,13 +4,13 @@
 
 #include <math.h>
 
-pubkey_t init_pubkey() {
+pubkey_t init_pubkey(void) {
     pubkey_t pub = { 0 };
     mpz_init(pub.N);
     return pub;
 }
 
-privkey_t init_privkey() {
+privkey_t init_privkey(void) {
     privkey_t priv = { 0 };
     mpz_inits(priv.d, priv.n, NULL);
     return priv;
@@ -23,6 +23,7 @@ void delete_keys(pubkey_t *pub, privkey_t *priv) {
 void ssc_key_gen(pubkey_t *pub, privkey_t *priv, uint64_t bits, uint64_t k) {
     uint64_t pbits = (random() % (bits / 2)) + (bits / 4);
     uint64_t qbits = bits - pbits;
+
     mpz_t p, q, p_min_1, q_min_1, pm1_mod_q, qm1_mod_q;
     mpz_inits(p, q, p_min_1, q_min_1, pm1_mod_q, qm1_mod_q, NULL);
 
@@ -84,7 +85,6 @@ void ssc_encrypt_file(FILE *infile, FILE *outfile, pubkey_t *pub) {
 
     free(block);
     mpz_clears(m, c, NULL);
-
 }
 
 void ssc_decrypt_file(FILE *infile, FILE *outfile, privkey_t *priv) {
