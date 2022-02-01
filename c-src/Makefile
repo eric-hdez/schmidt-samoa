@@ -1,13 +1,13 @@
 CC = clang
 CFLAGS = -g -Wall -Wextra -Werror -Wpedantic
 
-all: main
+all: keygen
 
-main: main.o numtheory.o ssc.o randstate.o
-	$(CC) $(CFLAGS) -lgmp -o main main.o numtheory.o ssc.o randstate.o
+keygen: keygen.o numtheory.o ssc.o randstate.o
+	$(CC) $(CFLAGS) -lgmp -o keygen keygen.o numtheory.o ssc.o randstate.o
 
-main.o: main.c
-	$(CC) $(CFLAGS) -c main.c
+keygen.o: keygen.c
+	$(CC) $(CFLAGS) -c keygen.c
 
 numtheory.o: numtheory.c
 	$(CC) $(CFLAGS) -c numtheory.c
@@ -19,7 +19,7 @@ randstate.o: randstate.c
 	$(CC) $(CFLAGS) -c randstate.c
 
 clean:
-	rm -f *.o main
+	rm -f *.o keygen
 
 format:
 	clang-format -i -style=file *.[ch]
