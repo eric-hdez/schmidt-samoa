@@ -60,14 +60,18 @@ def main() -> None:
 
     print("public key: {}\n".format(pub))
     print("private key: {}\n".format(d))
-    print("decrypt mod: {}\n".format(n))
-    m = ""
+    print("private mod: {}\n".format(n))
+    msg = ""
 
-    while m != ["exit", "Exit"]:
+    while True:
         msg = str(input("message to encrypt: "))
+        if msg.lower() in ["q", "quit", "exit"]:
+            break
+
         c = encrypt(encode(msg), pub)
         print("encrypted message: {}\n".format(c))
         m = decrypt(c, d, n)
         print("decrypted message: {}\n".format(decode(m)))
 
-main()
+if __name__ == '__main__':
+    main()
