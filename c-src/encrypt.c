@@ -50,33 +50,16 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    mpz_t user, signature;
-    mpz_inits(user, signature, NULL);
-    char username[KB] = { 0 };
-
     pubkey_t pub = init_pubkey();
-    ssc_read_pub(&pub, signature, username, pubfile);
+    ssc_read_pub(&pub, pubfile);
 
     if (verbose) {
-        gmp_fprintf(stderr, "user = %s\n", username);
-        gmp_fprintf(stderr, "s (%zu bits) = %Zd\n", mpz_sizeinbase(signature, 2), signature);
         gmp_fprintf(stderr, "N (%zu bits) = %Zd\n", mpz_sizeinbase(pub.N, 2), pub.N);
     }
-
-    /*mpz_set_str(user, username, 62);
-    if (!ssc_verify(user, signature, &pub)) {
-        fprintf(stderr, "error: invalid ssc key\n");
-        mpz_clears(user, signature, NULL);
-        fclose(pubfile);
-        fclose(infile);
-        fclose(outfile);
-        exit(EXIT_FAILURE);
-    }*/
 
     ssc_encrypt_file(infile, outfile, &pub);
 
     delete_pubkey(&pub);
-    mpz_clears(user, signature, NULL);
     fclose(pubfile);
     fclose(infile);
     fclose(outfile);

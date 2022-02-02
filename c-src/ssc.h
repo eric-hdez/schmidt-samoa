@@ -35,9 +35,9 @@ void ssc_encrypt_file(FILE *infile, FILE *outfile, pubkey_t *pub);
 
 void ssc_decrypt_file(FILE *infile, FILE *outfile, privkey_t *priv);
 
-void ssc_write_pub(pubkey_t *pub, mpz_t s, char username[], FILE *pubfile);
+void ssc_write_pub(pubkey_t *pub, FILE *pubfile);
 
-void ssc_read_pub(pubkey_t *pub, mpz_t s, char username[], FILE *pubfile);
+void ssc_read_pub(pubkey_t *pub, FILE *pubfile);
 
 void ssc_write_priv(privkey_t *priv, FILE *privfile);
 

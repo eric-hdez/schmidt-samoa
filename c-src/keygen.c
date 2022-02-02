@@ -57,22 +57,10 @@ int main(int argc, char *argv[]) {
     privkey_t priv = init_privkey();
     ssc_key_gen(&pub, &priv, bits, k);
 
-    char *username = getenv("USER");
-    if (!username) {
-        username = "default";
-    }
-
-    mpz_t user, signature;
-    mpz_inits(user, signature, NULL);
-    mpz_set_str(user, username, 62);
-
-    ssc_sign(signature, user, &pub, &priv);
-    ssc_write_pub(&pub, signature, username, pubfile);
+    ssc_write_pub(&pub, pubfile);
     ssc_write_priv(&priv, privfile);
 
     if (verbose) {
-        gmp_fprintf(stderr, "user = %s\n", username);
-        gmp_fprintf(stderr, "s (%zu bits) = %Zd\n", mpz_sizeinbase(signature, 2), signature);
         gmp_fprintf(stderr, "N (%zu bits) = %Zd\n", mpz_sizeinbase(pub.N, 2), pub.N);
         gmp_fprintf(stderr, "n (%zu bits) = %Zd\n", mpz_sizeinbase(priv.n, 2), priv.n);
         gmp_fprintf(stderr, "d (%zu bits) = %Zd\n", mpz_sizeinbase(priv.d, 2), priv.d);
@@ -80,7 +68,6 @@ int main(int argc, char *argv[]) {
 
     delete_pubkey(&pub);
     delete_privkey(&priv);
-    mpz_clears(user, signature, NULL);
     randstate_clear();
     fclose(pubfile);
     fclose(privfile);
