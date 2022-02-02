@@ -2,8 +2,6 @@
 
 #include "numtheory.h"
 
-#include <math.h>
-
 pubkey_t init_pubkey(void) {
     pubkey_t pub = { 0 };
     mpz_init(pub.N);
@@ -16,8 +14,12 @@ privkey_t init_privkey(void) {
     return priv;
 }
 
-void delete_keys(pubkey_t *pub, privkey_t *priv) {
-    mpz_clears(pub->N, priv->d, priv->n, NULL);
+void delete_pubkey(pubkey_t *pub) {
+    mpz_clear(pub->N);
+}
+
+void delete_privkey(privkey_t *priv) {
+    mpz_clears(priv->d, priv->n, NULL);
 }
 
 void ssc_key_gen(pubkey_t *pub, privkey_t *priv, uint64_t bits, uint64_t k) {
@@ -55,7 +57,7 @@ void ssc_key_gen(pubkey_t *pub, privkey_t *priv, uint64_t bits, uint64_t k) {
     pub->rlen = bits - 1;
     priv->rlen = pub->rlen;
 
-    mpz_clears(λ, p_min_1, q_min_1, NULL);
+    mpz_clears(p, q, λ, p_min_1, q_min_1, NULL);
 }
 
 void ssc_encrypt(mpz_t c, mpz_t m, pubkey_t *pub) {
@@ -108,19 +110,19 @@ void ssc_decrypt_file(FILE *infile, FILE *outfile, privkey_t *priv) {
 }
 
 void ssc_write_pub(pubkey_t *pub, mpz_t s, char username[], FILE *pubfile) {
-    gmp_fprintf(pubfile, "%Zx\n%Zx\n%s\n", pub->N, s, username);
+    gmp_fprintf(pubfile, "%Zx\n%" PRIx64 "\n%Zx\n%s\n", pub->N, pub->rlen, s, username);
 }
 
 void ssc_read_pub(pubkey_t *pub, mpz_t s, char username[], FILE *pubfile) {
-    gmp_fscanf(pubfile, "%Zx\n%Zx\n%s\n", pub->N, s, username);
+    gmp_fscanf(pubfile, "%Zx\n%" SCNx64 "\n%Zx\n%s\n", pub->N, &pub->rlen, s, username);
 }
 
 void ssc_write_priv(privkey_t *priv, FILE *privfile) {
-    gmp_fprintf(privfile, "%Zx\n%Zx\n", priv->n, priv->d);
+    gmp_fprintf(privfile, "%Zx\n%Zx%" PRIx64 "\n", priv->n, priv->d, priv->rlen);
 }
 
 void ssc_read_priv(privkey_t *priv, FILE *privfile) {
-    gmp_fscanf(privfile, "%Zx\n%Zx\n", priv->n, priv->d);
+    gmp_fscanf(privfile, "%Zx\n%Zx" SCNx64 "\n", priv->n, priv->d, &priv->rlen);
 }
 
 void ssc_sign(mpz_t s, mpz_t m, pubkey_t *pub, privkey_t *priv) {

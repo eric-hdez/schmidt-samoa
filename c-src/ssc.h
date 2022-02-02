@@ -1,5 +1,6 @@
 #pragma once
 
+#include <inttypes.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -20,7 +21,9 @@ pubkey_t init_pubkey(void);
 
 privkey_t init_privkey(void);
 
-void delete_keys(pubkey_t *pub, privkey_t *priv);
+void delete_pubkey(pubkey_t *pub);
+
+void delete_privkey(privkey_t *priv);
 
 void ssc_key_gen(pubkey_t *pub, privkey_t *priv, uint64_t bits, uint64_t k);
 

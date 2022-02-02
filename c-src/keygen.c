@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    FILE *pubfile = NULL; 
+    FILE *pubfile = NULL;
     FILE *privfile = NULL;
 
     if (!(pubfile = fopen(pubname, "w"))) {
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     randstate_init(seed);
 
     pubkey_t pub = init_pubkey();
-    privkey_t priv  = init_privkey();
+    privkey_t priv = init_privkey();
     ssc_key_gen(&pub, &priv, bits, k);
 
     char *username = getenv("USER");
@@ -78,6 +78,8 @@ int main(int argc, char *argv[]) {
         gmp_fprintf(stderr, "d (%zu bits) = %Zd\n", mpz_sizeinbase(priv.d, 2), priv.d);
     }
 
+    delete_pubkey(&pub);
+    delete_privkey(&priv);
     mpz_clears(user, signature, NULL);
     randstate_clear();
     fclose(pubfile);
