@@ -118,11 +118,11 @@ void ssc_read_pub(pubkey_t *pub, mpz_t s, char username[], FILE *pubfile) {
 }
 
 void ssc_write_priv(privkey_t *priv, FILE *privfile) {
-    gmp_fprintf(privfile, "%Zx\n%Zx%" PRIx64 "\n", priv->n, priv->d, priv->rlen);
+    gmp_fprintf(privfile, "%Zx\n%Zx\n%" PRIx64 "\n", priv->n, priv->d, priv->rlen);
 }
 
 void ssc_read_priv(privkey_t *priv, FILE *privfile) {
-    gmp_fscanf(privfile, "%Zx\n%Zx" SCNx64 "\n", priv->n, priv->d, &priv->rlen);
+    gmp_fscanf(privfile, "%Zx\n%Zx\n%" SCNx64 "\n", priv->n, priv->d, &priv->rlen);
 }
 
 void ssc_sign(mpz_t s, mpz_t m, pubkey_t *pub, privkey_t *priv) {

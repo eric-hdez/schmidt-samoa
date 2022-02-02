@@ -1,7 +1,7 @@
 CC = clang
 CFLAGS = -g -Wall -Wextra -Werror -Wpedantic
 
-all: keygen encrypt
+all: keygen encrypt decrypt
 
 keygen: keygen.o numtheory.o ssc.o randstate.o
 	$(CC) $(CFLAGS) -lgmp -o keygen keygen.o numtheory.o ssc.o randstate.o
@@ -9,11 +9,17 @@ keygen: keygen.o numtheory.o ssc.o randstate.o
 encrypt: encrypt.o ssc.o numtheory.o randstate.o
 	$(CC) $(CFLAGS) -lgmp -o encrypt encrypt.o ssc.o numtheory.o randstate.o
 
+decrypt: decrypt.o ssc.o numtheory.o randstate.o
+	$(CC) $(CFLAGS) -lgmp -o decrypt decrypt.o ssc.o numtheory.o randstate.o
+
 keygen.o: keygen.c
 	$(CC) $(CFLAGS) -c keygen.c
 
 encrypt.o: encrypt.c
 	$(CC) $(CFLAGS) -c encrypt.c
+
+decrypt.o: decrypt.c
+	$(CC) $(CFLAGS) -c decrypt.c
 
 numtheory.o: numtheory.c
 	$(CC) $(CFLAGS) -c numtheory.c
